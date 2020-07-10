@@ -13,6 +13,15 @@ class CalleryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mLayoutBinding = DataBindingUtil.setContentView(this,R.layout.layout_callery_activity)
+        init()
+    }
+
+    private fun init() {
+        initOpenCameraFragment()
+    }
+
+    private fun initOpenCameraFragment() {
+        FragmentsController.openCamera(supportFragmentManager = supportFragmentManager,container = R.id.container)
     }
 
 }

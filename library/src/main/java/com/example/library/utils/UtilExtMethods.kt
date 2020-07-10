@@ -12,7 +12,7 @@ fun FragmentManager.activeFragment() : BaseFragment? {
     return (findFragmentByTag(tag) as? BaseFragment)
 }
 
-fun FragmentManager.addFragment(fragment: Fragment, container:Int, fragmentTag:String, addToBackStack:Boolean) {
+fun FragmentManager.addFragment(fragment: Fragment, container:Int, fragmentTag:String, addToBackStack:Boolean = true) {
     if(!addToBackStack) {
         beginTransaction().add(container,fragment,fragmentTag).commit()
     }
