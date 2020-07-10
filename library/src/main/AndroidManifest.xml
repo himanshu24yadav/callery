@@ -1,2 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.library" />
+    package="com.example.library">
+
+    <application>
+        <activity android:name="com.example.library.base.CalleryActivity"/>
+    </application>
+
+</manifest>
