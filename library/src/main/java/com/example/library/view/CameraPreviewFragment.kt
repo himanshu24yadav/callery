@@ -51,17 +51,13 @@ class CameraPreviewFragment(mContext: Context?, private var mCamera:Camera?, pri
             val parameters = mCamera!!.parameters
 
             //set Picture Size
-            val sizes =
-                parameters.supportedPictureSizes
+            val sizes = parameters.supportedPictureSizes
             var size = sizes[0]
             for (i in sizes.indices) {
                 if (sizes[i].width > size.width) size = sizes[i]
             }
             parameters.setPictureSize(size.width, size.height)
-            if (mPreviewSize != null) parameters.setPreviewSize(
-                mPreviewSize!!.width,
-                mPreviewSize!!.height
-            )
+            if (mPreviewSize != null) parameters.setPreviewSize(mPreviewSize!!.width, mPreviewSize!!.height)
             parameters.focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
             parameters.jpegQuality = 100
             parameters.jpegThumbnailQuality = 100
@@ -88,19 +84,14 @@ class CameraPreviewFragment(mContext: Context?, private var mCamera:Camera?, pri
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val width = View.resolveSize(suggestedMinimumWidth, widthMeasureSpec)
-        val height =
-            View.resolveSize(suggestedMinimumHeight, heightMeasureSpec)
+        val height = View.resolveSize(suggestedMinimumHeight, heightMeasureSpec)
         setMeasuredDimension(width, height)
         if (mSupportedPreviewSizes != null) {
             mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height)
         }
     }
 
-    private fun getOptimalPreviewSize(
-        sizes: List<Camera.Size>?,
-        w: Int,
-        h: Int
-    ): Camera.Size? {
+    private fun getOptimalPreviewSize(sizes: List<Camera.Size>?, w: Int, h: Int): Camera.Size? {
         var optimalSize: Camera.Size? = null
         try {
             val ASPECT_TOLERANCE = 0.1

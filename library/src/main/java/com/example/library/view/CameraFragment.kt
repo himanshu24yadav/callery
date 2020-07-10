@@ -1,9 +1,11 @@
 package com.example.library.view
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.hardware.Camera
 import android.hardware.Camera.PictureCallback
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
@@ -14,6 +16,9 @@ import com.example.library.R
 import com.example.library.base.BaseFragment
 import com.example.library.callbacks.CameraPreviewInterface
 import com.example.library.databinding.LayoutCameraFragmentBinding
+import com.example.library.utils.UtilMethods
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 class CameraFragment : BaseFragment(),CameraPreviewInterface {
@@ -24,6 +29,7 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
     private var isCameraPermissionGranted = true
     private var mCameraPreviewFragment: CameraPreviewFragment? = null
     private var isSafeToTakePic: Boolean = false
+    private var mCapturedImageFile: File? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,7 +57,7 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
 
     private fun initListeners() {
         mLayoutBinding.cameraIv.setOnClickListener {
-
+            captureImage()
         }
     }
 
@@ -110,10 +116,37 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
 
         try {
             if (mCamera != null) mCamera!!.startPreview()
+
+            mCapturedImageFile = UtilMethods.createTempFile()
+            putFileToStorage(data)
+
+            //to deduce height and width of image without making bitmap
+            val bmOptions = BitmapFactory.Options()
+            bmOptions.inJustDecodeBounds = true
+            BitmapFactory.decodeByteArray(data, 0, data.size, bmOptions)
+            val mHeight = bmOptions.outHeight
+            val mWidth = bmOptions.outWidth
+            bmOptions.inJustDecodeBounds = false
+
+            Log.e("CAMERA_WH","$mHeight x $mWidth")
+            Log.e("CAMERA_SIZE","${(mCapturedImageFile?.length())?.div(1024)?.div(1024)}")
+            //UtilMethods.addImageToGallery(mCapturedImageFile!!.absolutePath, mContext, data.size, mWidth, mHeight)
             isSafeToTakePic = true
         } catch (e: IOException) {
             e.printStackTrace()
             isSafeToTakePic = true
+        }
+    }
+
+    private fun putFileToStorage(bytes: ByteArray) {
+        try {
+            mCapturedImageFile?.let {
+                val fos = FileOutputStream(it)
+                fos.write(bytes)
+                fos.close()
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
     }
 
