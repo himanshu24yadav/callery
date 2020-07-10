@@ -128,7 +128,7 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
             bmOptions.inJustDecodeBounds = false
 
             Log.e("CAMERA_PICTURE_TAKEN_WH","$mHeight x $mWidth")
-            Log.e("CAMERA_SIZE","${(mCapturedImageFile?.length())?.div(1024)?.div(1024)} MB")
+            Log.e("CAMERA_SIZE","${(mCapturedImageFile?.length())?.div(1024.0)?.div(1024.0)} MB")
 
             isSafeToTakePic = true
         } catch (e: IOException) {
