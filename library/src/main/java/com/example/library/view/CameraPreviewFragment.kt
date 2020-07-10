@@ -3,6 +3,7 @@ package com.example.library.view
 import android.content.Context
 import android.hardware.Camera
 import android.os.Build
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
@@ -72,6 +73,9 @@ class CameraPreviewFragment(mContext: Context?, private var mCamera:Camera?, pri
                 mCamera!!.setDisplayOrientation(90)
             }
             mCamera!!.parameters = parameters
+
+            Log.e("CAMERA_PICTURE_WH","${parameters.pictureSize.width} x ${parameters.pictureSize.height}")
+            Log.e("CAMERA_PREVIEW_WH","${parameters.previewSize.width} x ${parameters.previewSize.height}")
 
             // start preview with new settings
             mCamera!!.setPreviewDisplay(mHolder)

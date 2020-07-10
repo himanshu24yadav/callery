@@ -91,7 +91,7 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
     private fun getCameraInstance(): Camera? {
         var cameraToShowPreview: Camera? = null
         try {
-            cameraToShowPreview = Camera.open() // attempt to get a Camera instance
+            cameraToShowPreview = Camera.open()
         } catch (e: java.lang.Exception) {
             // Camera is not available (in use or does not exist)
             e.printStackTrace()
@@ -120,7 +120,6 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
             mCapturedImageFile = UtilMethods.createTempFile()
             putFileToStorage(data)
 
-            //to deduce height and width of image without making bitmap
             val bmOptions = BitmapFactory.Options()
             bmOptions.inJustDecodeBounds = true
             BitmapFactory.decodeByteArray(data, 0, data.size, bmOptions)
@@ -128,9 +127,9 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
             val mWidth = bmOptions.outWidth
             bmOptions.inJustDecodeBounds = false
 
-            Log.e("CAMERA_WH","$mHeight x $mWidth")
-            Log.e("CAMERA_SIZE","${(mCapturedImageFile?.length())?.div(1024)?.div(1024)}")
-            //UtilMethods.addImageToGallery(mCapturedImageFile!!.absolutePath, mContext, data.size, mWidth, mHeight)
+            Log.e("CAMERA_PICTURE_TAKEN_WH","$mHeight x $mWidth")
+            Log.e("CAMERA_SIZE","${(mCapturedImageFile?.length())?.div(1024)?.div(1024)} MB")
+
             isSafeToTakePic = true
         } catch (e: IOException) {
             e.printStackTrace()
