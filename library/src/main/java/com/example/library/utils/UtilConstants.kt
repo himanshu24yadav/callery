@@ -3,6 +3,7 @@ package com.example.library.utils
 class UtilConstants {
     companion object {
         const val CAMERA_FRAG_TAG = "CAMERA_FRAG_TAG"
+        const val IMAGE_PREVIEW_FRAG_TAG = "IMAGE_PREVIEW_FRAG_TAG"
         const val PERMISSION_REQUEST_CODE = 101
 
         const val PERMISSION_CAMERA = android.Manifest.permission.CAMERA
