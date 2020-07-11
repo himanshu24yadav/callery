@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val layoutBinding : ActivityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        supportActionBar?.title = "Home"
         layoutBinding.openCameraTv.setOnClickListener {
             openCamera()
         }

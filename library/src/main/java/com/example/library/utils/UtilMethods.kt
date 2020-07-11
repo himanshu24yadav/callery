@@ -10,6 +10,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class UtilMethods {
     companion object {
 
@@ -17,9 +18,9 @@ class UtilMethods {
         fun createTempFile(): File? {
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault()).format(Date())
             val imageFileName = "PROD_$timeStamp"
-            val storageDir = File(Environment.getExternalStorageDirectory().toString() + "/Callery/tempImages/")
+            val storageDir = File(Environment.getExternalStorageDirectory().toString() + "/Callery/")
             if (!storageDir.exists()) {
-                val wallpaperDirectory = File(Environment.getExternalStorageDirectory().path+ "/Callery/tempImages/")
+                val wallpaperDirectory = File(Environment.getExternalStorageDirectory().path+ "/Callery/")
                 wallpaperDirectory.mkdirs()
             }
             return File.createTempFile(imageFileName, ".jpg", storageDir)

@@ -3,7 +3,7 @@ package com.example.library.base
 import androidx.fragment.app.FragmentManager
 import com.example.library.utils.UtilConstants
 import com.example.library.utils.addFragment
-import com.example.library.view.CameraFragment
+import com.example.library.view.cameraApi.CameraFragment
 
 class FragmentsController {
 

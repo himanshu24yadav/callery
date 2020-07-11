@@ -1,4 +1,4 @@
-package com.example.library.view
+package com.example.library.view.cameraApi
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -14,20 +14,25 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import com.example.library.R
 import com.example.library.base.BaseFragment
-import com.example.library.callbacks.CameraPreviewInterface
+import com.example.library.callbacks.CustomSurfaceViewInterface
 import com.example.library.databinding.LayoutCameraFragmentBinding
+import com.example.library.permissionHelper.PermissionModel
+import com.example.library.permissionHelper.PermissionsManager
+import com.example.library.permissionHelper.PermissionsResultInterface
+import com.example.library.utils.UtilConstants
 import com.example.library.utils.UtilMethods
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class CameraFragment : BaseFragment(),CameraPreviewInterface {
+@Suppress("DEPRECATION")
+class CameraFragment : BaseFragment(),CustomSurfaceViewInterface,PermissionsResultInterface {
 
     private var mContext:Context? = null
     private lateinit var mLayoutBinding : LayoutCameraFragmentBinding
     private var mCamera:Camera? = null
     private var isCameraPermissionGranted = true
-    private var mCameraPreviewFragment: CameraPreviewFragment? = null
+    private var mCustomSurfaceView: CustomSurfaceView? = null
     private var isSafeToTakePic: Boolean = false
     private var mCapturedImageFile: File? = null
 
@@ -48,7 +53,10 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
 
     override fun onResume() {
         super.onResume()
-        setCameraView()
+        if(PermissionsManager.checkPermissions(mContext, arrayOf(UtilConstants.PERMISSION_CAMERA,UtilConstants.PERMISSION_READ_STORAGE,
+            UtilConstants.PERMISSION_WRITE_STORAGE),permissionCallback = this)) {
+            setCameraView()
+        }
     }
 
     private fun init() {
@@ -77,11 +85,11 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
     private fun initSetCameraPreview() {
         try {
             if (mCamera != null) {
-                mCameraPreviewFragment = CameraPreviewFragment(mContext, mCamera, this)
+                mCustomSurfaceView = CustomSurfaceView(mContext, mCamera, this)
                 val previewFrame: FrameLayout = mLayoutBinding.cameraPreviewFrame
                 isSafeToTakePic = true
                 previewFrame.removeAllViews()
-                previewFrame.addView(mCameraPreviewFragment)
+                previewFrame.addView(mCustomSurfaceView)
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -107,7 +115,7 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
         }
     }
 
-    private val mPicture = PictureCallback { data, camera ->
+    private val mPicture = PictureCallback { data, _ ->
 
         if (data == null) {
             isSafeToTakePic = true
@@ -153,9 +161,9 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
 
     override fun onSurfaceDestroyed(holder: SurfaceHolder?) {
         try {
-            if (mCamera != null && mCameraPreviewFragment != null) {
+            if (mCamera != null && mCustomSurfaceView != null) {
                 mCamera!!.setPreviewCallback(null)
-                mCameraPreviewFragment!!.holder.removeCallback(mCameraPreviewFragment)
+                mCustomSurfaceView!!.holder.removeCallback(mCustomSurfaceView)
                 mCamera!!.release()
                 mCamera = null
             }
@@ -173,6 +181,12 @@ class CameraFragment : BaseFragment(),CameraPreviewInterface {
             }
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    override fun onPermissionResult(isAllGranted: Boolean, permissionResults: ArrayList<PermissionModel>?, requestCode: Int) {
+        if(isAllGranted) {
+            setCameraView()
         }
     }
 }
